@@ -61,9 +61,29 @@ module.exports = function(RED) {
 				if (typeof msg.payload === "boolean") {
 					var found = false;
 					for (var i = 0; i < node.rules.length; i++) {
-						//node.warn("rule.s: "+node.rules[i].s);
-						//node.warn("rule.c: "+node.rules[i].c);
-						if (node.rules[i].s == node.state && node.rules[i].c == msg.topic && ((msg.payload && node.rules[i].t) || (!msg.payload && !node.rules[i].t))) {
+/*						var rule = node.rules[i].s;
+
+						// "."  => Find a single character, except newline or line terminator
+						// ".*" => Matches any string that contains zero or more characters
+						rule = rule.split("*").join(".*");
+
+						// "^"  => Matches any string with the following at the beginning of it
+						// "$"  => Matches any string with that in front at the end of it
+						rule = "^" + rule + "$";
+
+						//Create a regular expression object for matching string
+						var regex = new RegExp(rule);
+
+						//Returns true if it finds a match, otherwise it returns false
+						// -->  regex.test(str);
+*/
+						//node.warn("rule.s: "+node.rules[i].s + " - .c: "+node.rules[i].c + " - .t:" + node.rules[i].t);
+						//node.warn("Comp1: "+ (msg.payload && node.rules[i].t) + "  Comp2: " + (!msg.payload && !node.rules[i].t));
+						//node.warn("rule.c: "+node.rules[i].c + "Type: " + (typeof node.rules[i].t));
+						if ( (node.rules[i].s  == node.state) &&
+						//if ( regex.test(node.state) &&
+						    (node.rules[i].c == msg.topic) && 
+						    ((msg.payload && (node.rules[i].t == "true")) || (!msg.payload && !(node.rules[i].t == "true")))) {
 							node.status({fill:"green",shape:"dot",text:node.rules[i].s+" => "+node.rules[i].d});
 							node.state = node.rules[i].d;
 							var outMsg = {};
